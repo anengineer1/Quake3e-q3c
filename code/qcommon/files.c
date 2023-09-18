@@ -297,6 +297,9 @@ static	cvar_t		*fs_homepath;
 static	cvar_t		*fs_steampath;
 
 static	cvar_t		*fs_basepath;
+#if defined( QC )
+static cvar_t* fs_q3apath;
+#endif
 static	cvar_t		*fs_basegame;
 static	cvar_t		*fs_copyfiles;
 static	cvar_t		*fs_gamedirvar;
@@ -4646,6 +4649,9 @@ static void FS_Startup( void ) {
 	fs_basepath = Cvar_Get( "fs_basepath", Sys_DefaultBasePath(), CVAR_INIT | CVAR_PROTECTED | CVAR_PRIVATE );
 	Cvar_SetDescription( fs_basepath, "Write-protected CVAR specifying the path to the installation folder of the game." );
 	fs_basegame = Cvar_Get( "fs_basegame", BASEGAME, CVAR_INIT | CVAR_PROTECTED );
+#if defined( QC ) // needs some study
+	fs_q3apath = Cvar_Get ("fs_q3apath", "", CVAR_INIT);
+#endif
 	Cvar_SetDescription( fs_basegame, "Write-protected CVAR specifying the path to the base game folder." );
 	fs_steampath = Cvar_Get( "fs_steampath", Sys_SteamPath(), CVAR_INIT | CVAR_PROTECTED | CVAR_PRIVATE );
 
@@ -4667,7 +4673,7 @@ static void FS_Startup( void ) {
 	fs_homepath = Cvar_Get( "fs_homepath", homePath, CVAR_INIT | CVAR_PROTECTED | CVAR_PRIVATE );
 	Cvar_SetDescription( fs_homepath, "Directory to store user configuration and downloaded files." );
 
-	fs_gamedirvar = Cvar_Get( "fs_game", "", CVAR_INIT | CVAR_SYSTEMINFO );
+	fs_gamedirvar = Cvar_Get( "fs_game", APEXGAME, CVAR_INIT | CVAR_SYSTEMINFO ); // ( QC ) modified be in line with cnqc
 	Cvar_CheckRange( fs_gamedirvar, NULL, NULL, CV_FSPATH );
 	Cvar_SetDescription( fs_gamedirvar, "Specify an alternate mod directory and run the game with this mod." );
 
@@ -4696,6 +4702,11 @@ static void FS_Startup( void ) {
 	if ( fs_basepath->string[0] ) {
 		FS_AddGameDirectory( fs_basepath->string, fs_basegame->string );
 	}
+#if defined( QC ) // perhaps more study is needed
+	if (fs_q3apath->string[0] && Q_stricmp(fs_q3apath->string,fs_basepath->string)) {
+		FS_AddGameDirectory ( fs_q3apath->string, gameName );
+	}
+#endif
 
 	// fs_homepath is somewhat particular to *nix systems, only add if relevant
 	// NOTE: same filtering below for mods and basegame

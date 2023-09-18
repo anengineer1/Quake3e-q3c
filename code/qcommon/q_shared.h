@@ -26,12 +26,27 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 
+#if defined( QC ) // Begin QC block
+#define Q3_VERSION		"Blood Run PB3 (Q3 1.32e)"
+#define CLIENT_WINDOW_TITLE	"Blood Run"
+#define CONSOLE_WINDOW_TITLE	"Blood Run"
+#else // End QC block and use the usual Q3e client data
 #define Q3_VERSION            "Q3 1.32e"
 #ifndef SVN_VERSION
   #define SVN_VERSION Q3_VERSION
 #endif
 #define CLIENT_WINDOW_TITLE   "Quake 3: Arena"
 #define CONSOLE_WINDOW_TITLE  "Quake 3 Console"
+#endif
+
+// Make fs_game qc
+#define BASEGAME			"baseq3"
+#if defined( QC )
+#define APEXGAME			"qc"
+#else
+#define APEXGAME			""
+#endif
+
 // 1.32 released 7-10-2002
 
 //#define DEFAULT_GAME			"edawn"
@@ -1156,7 +1171,11 @@ typedef struct {
 #define	MAX_STATS				16
 #define	MAX_PERSISTANT			16
 #define	MAX_POWERUPS			16
+#if defined( QC ) // QC has more weapons
+#define	MAX_WEAPONS				24
+#else
 #define	MAX_WEAPONS				16		
+#endif
 
 #define	MAX_PS_EVENTS			2
 
@@ -1215,6 +1234,30 @@ typedef struct playerState_s {
 	int			clientNum;		// ranges from 0 to MAX_CLIENTS-1
 	int			weapon;			// copied to entityState_t->weapon
 	int			weaponstate;
+#if defined( QC ) // extra data
+	int			weaponFiringState; // for complex weapon behaviors (like tribolt)
+	int			champion;		// selected champion
+	int			baseHealth;
+	int			baseArmor;
+
+	int			jumpTime;
+	int			landTime;
+	int			walljumps;
+	int			crouchSlideTime;
+
+	int			ab_time;		// ability timer, semantic depends on the flags
+	int			ab_misctime;	// additional timer for various purposes (i.e. grenade timing for Keel)
+	int			ab_num;			// id of the entity associated with the champion (orb for Ranger), number of active totems, etc
+	int			ab_flags;		// some bits to know whats happening with ability progressing
+	qboolean	overbounce;		// overbounce bug handling
+	// damage over time
+	int			dotAcidTime;
+	int			dotAcidNum;
+	int			dotAcidOwner;
+	int			dotFireTime;
+	int			dotFireNum;
+	int			dotFireOwner;
+#endif
 
 	vec3_t		viewangles;		// for fixed views
 	int			viewheight;
@@ -1239,6 +1282,12 @@ typedef struct playerState_s {
 	int			pmove_framecount;	// FIXME: don't transmit over the network
 	int			jumppad_frame;
 	int			entityEventSequence;
+#if defined( QC )
+	int			airTime;
+	int			attackerNum;
+	int			attackerTime;
+	int			ringoutKiller;
+#endif
 } playerState_t;
 
 
@@ -1266,7 +1315,13 @@ typedef struct playerState_s {
 #define BUTTON_PATROL		512
 #define BUTTON_FOLLOWME		1024
 
-#define	BUTTON_ANY			2048			// any key whatsoever
+#if defined( QC )
+#define BUTTON_ABILITY		2048
+#define BUTTON_ZOOM			4096
+#define BUTTON_ANY			8192		// any key whatsoever
+#else
+#define	BUTTON_ANY			2048		// any key whatsoever
+#endif
 
 #define	MOVE_RUN			120			// if forwardmove or rightmove are >= MOVE_RUN,
 										// then BUTTON_WALKING should be set
@@ -1300,6 +1355,9 @@ typedef struct {
 	int		trDuration;			// if non 0, trTime + trDuration = stop time
 	vec3_t	trBase;
 	vec3_t	trDelta;			// velocity, etc
+#if defined( QC )
+	int		trGravity;
+#endif
 } trajectory_t;
 
 // entityState_t is the information conveyed from the server
@@ -1334,6 +1392,10 @@ typedef struct entityState_s {
 	int		constantLight;	// r + (g<<8) + (b<<16) + (intensity<<24)
 	int		loopSound;		// constantly loop this sound
 
+#if defined( QC )
+	int		loopSoundDist;
+#endif // QC
+
 	int		modelindex;
 	int		modelindex2;
 	int		clientNum;		// 0 to (MAX_CLIENTS - 1), for players and corpses
@@ -1351,6 +1413,10 @@ typedef struct entityState_s {
 	int		torsoAnim;		// mask off ANIM_TOGGLEBIT
 
 	int		generic1;
+#if defined( QC )
+	int		affiliation;	// team for game modes or player index for FFA
+	int		totemcharge;	// for totems
+#endif // QC
 } entityState_t;
 
 typedef enum {

@@ -64,6 +64,9 @@ typedef struct {
 	// only send to this client when SVF_SINGLECLIENT is set
 	// if SVF_CLIENTMASK is set, use bitmask for clients to send to (maxclients must be <= 32, up to the mod to enforce this)
 	int			singleClient;
+#if defined( QC )
+	int			piercingSightMask;
+#endif // QC
 
 	qboolean	bmodel;				// if false, assume an explicit mins / maxs bounding box
 									// only set by trap_SetBrushModel
@@ -436,6 +439,10 @@ typedef enum {
 	// and parameters.  Return qfalse if the game doesn't recognize it as a command.
 
 	BOTAI_START_FRAME,				// ( int time );
+#if defined( QC )
+	GAME_SKIP_ENTITY_TRACE, // ( int entityNum );
+	                        // checks if the entity should be skipped during tracing, needed to implement friendly entities
+#endif                      // QC
 
 	GAME_EXPORT_LAST
 } gameExport_t;

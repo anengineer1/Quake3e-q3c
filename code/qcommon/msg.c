@@ -684,6 +684,9 @@ static const netField_t entityStateFields[] =
 { NETF(pos.trBase[1]), 0 },
 { NETF(pos.trDelta[0]), 0 },
 { NETF(pos.trDelta[1]), 0 },
+#if defined( QC )
+{ NETF(pos.trGravity), 0 },
+#endif
 { NETF(pos.trBase[2]), 0 },
 { NETF(apos.trBase[1]), 0 },
 { NETF(pos.trDelta[2]), 0 },
@@ -696,7 +699,11 @@ static const netField_t entityStateFields[] =
 { NETF(legsAnim), 8 },
 { NETF(groundEntityNum), GENTITYNUM_BITS },
 { NETF(pos.trType), 8 },
+#if defined( QC )
+{ NETF(eFlags), 24 },
+#else // QC
 { NETF(eFlags), 19 },
+#endif // QC
 { NETF(otherEntityNum), GENTITYNUM_BITS },
 { NETF(weapon), 8 },
 { NETF(clientNum), 8 },
@@ -711,7 +718,14 @@ static const netField_t entityStateFields[] =
 { NETF(modelindex), 8 },
 { NETF(otherEntityNum2), GENTITYNUM_BITS },
 { NETF(loopSound), 8 },
+#if defined( QC )
+{ NETF(loopSoundDist), 12 },
+#endif // QC
+#if defined( QC )
+{ NETF(generic1), 32 }, // more generic
+#else // QC
 { NETF(generic1), 8 },
+#endif // QC
 { NETF(origin2[2]), 0 },
 { NETF(origin2[0]), 0 },
 { NETF(origin2[1]), 0 },
@@ -724,12 +738,19 @@ static const netField_t entityStateFields[] =
 { NETF(apos.trDelta[0]), 0 },
 { NETF(apos.trDelta[1]), 0 },
 { NETF(apos.trDelta[2]), 0 },
+#if defined( QC )
+{ ESF(apos.trGravity), 0 },
+#endif
 { NETF(time2), 32 },
 { NETF(angles[2]), 0 },
 { NETF(angles2[0]), 0 },
 { NETF(angles2[2]), 0 },
 { NETF(constantLight), 32 },
-{ NETF(frame), 16 }
+{ NETF(frame), 16 },
+#if defined( QC )
+{ NETF(affiliation), 8 },
+{ NETF(totemcharge), 32 },
+#endif // QC
 };
 
 
@@ -1017,6 +1038,11 @@ static const netField_t playerStateFields[] =
 { PSF(events[0]), 8 },
 { PSF(legsAnim), 8 },
 { PSF(events[1]), 8 },
+#if defined( QC )
+{ PSF(pm_flags), 20 },
+#else
+{ PSF(pm_flags), 16 },
+#endif
 { PSF(pm_flags), 16 },
 { PSF(groundEntityNum), GENTITYNUM_BITS },
 { PSF(weaponstate), 4 },
@@ -1046,6 +1072,23 @@ static const netField_t playerStateFields[] =
 { PSF(grapplePoint[2]), 0 },
 { PSF(jumppad_ent), GENTITYNUM_BITS },
 { PSF(loopSound), 16 }
+#if defined( QC )
+{ PSF(weaponFiringState), 8 },
+{ PSF(champion), 5 },
+{ PSF(ab_time), 6 }, // up to 64 seconds to recharge an ability
+{ PSF(ab_misctime), 24 }, // can count milliseconds for the fair amount of time
+{ PSF(ab_flags), 8 },
+{ PSF(ab_num), 32 },
+{ PSF(overbounce), 1 },
+{ PSF(dotAcidTime), 32 },
+{ PSF(dotAcidNum), 4 },	// up to 16 ticks of acid damage
+{ PSF(dotAcidOwner), 6 },
+{ PSF(dotFireTime), 32 },
+{ PSF(dotFireNum), 4 }, // up to 16 ticks of fire damage
+{ PSF(dotFireOwner), 6 },
+{ PSF(baseHealth), 8 }, // base health can't exceed 256
+{ PSF(baseArmor), 8 }, // base armor can't exceed 256
+#endif
 };
 
 /*
