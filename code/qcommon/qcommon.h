@@ -294,6 +294,9 @@ extern const int demo_protocols[];
 
 #define	UPDATE_SERVER_NAME	"update.quake3arena.com"
 // override on command line, config files etc.
+#if defined( QC )
+#define MASTER_SERVER_NAME	"164.90.203.227"
+#endif
 #ifndef MASTER_SERVER_NAME
 #define MASTER_SERVER_NAME	"master.quake3arena.com"
 #endif
@@ -1319,6 +1322,11 @@ void *Sys_LoadLibrary( const char *name );
 void *Sys_LoadFunction( void *handle, const char *name );
 int   Sys_LoadFunctionErrors( void );
 void  Sys_UnloadLibrary( void *handle );
+
+#if defined( QC ) // to review
+void Sys_FindQ3APath( void );
+qboolean Sys_LocateQ3APath( void );
+#endif
 
 // adaptive huffman functions
 void Huff_Compress( msg_t *buf, int offset );

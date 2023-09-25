@@ -5329,6 +5329,9 @@ void FS_InitFilesystem( void ) {
 	Com_StartupVariable( "fs_basepath" );
 	Com_StartupVariable( "fs_homepath" );
 	Com_StartupVariable( "fs_game" );
+#if defined( QC )
+	Com_StartupVariable( "fs_q3apath" );
+#endif
 	Com_StartupVariable( "fs_basegame" );
 	Com_StartupVariable( "fs_copyfiles" );
 	Com_StartupVariable( "fs_restrict" );

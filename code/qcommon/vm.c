@@ -220,6 +220,15 @@ static const char *vmName[ VM_COUNT ] = {
 	"ui"
 };
 
+#if !defined( QC ) || 1
+static const cvarTableItem_t vm_cvars[] =
+{
+	{ NULL, "vm_cgame", "2", CVAR_ARCHIVE, CVART_INTEGER, "0", "2", "how to load the cgame VM" help_vm_load },
+	{ NULL, "vm_game", "2", CVAR_ARCHIVE, CVART_INTEGER, "0", "2", "how to load the qagame VM" help_vm_load },
+	{ NULL, "vm_ui", "2", CVAR_ARCHIVE, CVART_INTEGER, "0", "2", "how to load the ui VM" help_vm_load }
+};
+#endif
+
 static void VM_VmInfo_f( void );
 static void VM_VmProfile_f( void );
 
