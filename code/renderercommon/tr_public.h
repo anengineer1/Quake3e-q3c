@@ -94,7 +94,13 @@ typedef struct {
 
 	int		(*MarkFragments)( int numPoints, const vec3_t *points, const vec3_t projection,
 				   int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t *fragmentBuffer );
-
+#if defined( QC )
+	int		(*ProjectDecal)(
+		const vec3_t origin, const vec3_t dir, 
+		vec_t radius, vec_t depth, vec_t orientation,
+		int maxPoints, vec3_t pointBuffer, vec3_t attribBuffer,
+		int maxFragments, markFragment_t *fragmentBuffer );
+#endif // QC
 	int		(*LerpTag)( orientation_t *tag,  qhandle_t model, int startFrame, int endFrame,
 					 float frac, const char *tagName );
 	void	(*ModelBounds)( qhandle_t model, vec3_t mins, vec3_t maxs );
@@ -120,8 +126,9 @@ typedef struct {
 
 	void	(*VertexLighting)( qboolean allowed );
 	void	(*SyncRender)( void );
-
-
+#if defined( QC )
+	void (*GetAdvertisements)(int *num, float *verts, void *shaders);
+#endif
 } refexport_t;
 
 //

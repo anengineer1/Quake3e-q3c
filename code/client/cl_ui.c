@@ -850,6 +850,12 @@ static intptr_t CL_UISystemCalls( intptr_t *args ) {
 			args[1] = EXEC_INSERT;
 		}
 		Cbuf_ExecuteText( args[1], VMA(2) );
+#if defined( QC )
+		// ping should be executed as quick as possible otherwise server browser wouldn't work
+		if ( Q_strncmp("ping ", (char*)VMA(2), 5) == 0 ) {
+			Cbuf_Execute();
+		}
+#endif
 		return 0;
 
 	case UI_FS_FOPENFILE:
@@ -912,6 +918,11 @@ static intptr_t CL_UISystemCalls( intptr_t *args ) {
 	case UI_R_DRAWSTRETCHPIC:
 		re.DrawStretchPic( VMF(1), VMF(2), VMF(3), VMF(4), VMF(5), VMF(6), VMF(7), VMF(8), args[9] );
 		return 0;
+#if defined( QC ) // done but needs to implement dratriangle on tr_public.h look for sarge message
+	case UI_R_DRAWTRIANGLE:
+		re.DrawTriangle( VMF(1), VMF(2), VMF(3), VMF(4), VMF(5), VMF(6), VMF(7), VMF(8), VMF(9), VMF(10), VMF(11), VMF(12), args[13] );
+		return 0;
+#endif
 
 	case UI_R_MODELBOUNDS:
 		re.ModelBounds( args[1], VMA(2), VMA(3) );
