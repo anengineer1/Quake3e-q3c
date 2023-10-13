@@ -612,6 +612,11 @@ static intptr_t CL_CgameSystemCalls( intptr_t *args ) {
 	case CG_R_ADDPOLYTOSCENE:
 		re.AddPolyToScene( args[1], args[2], VMA(3), 1 );
 		return 0;
+ #if defined( QC )
+	case DO_NOT_WANT_CG_R_ADDDEFECTIVELIGHTTOSCENE:
+		re.AddLightToScene( VMA(1), VMF(2), VMF(3), VMF(4), VMF(5) );
+		return 0;
+#endif
 	case CG_R_ADDPOLYSTOSCENE:
 		re.AddPolyToScene( args[1], args[2], VMA(3), args[4] );
 		return 0;
@@ -762,8 +767,26 @@ static intptr_t CL_CgameSystemCalls( intptr_t *args ) {
 		VM_CHECKBOUNDS( cgvm, args[1], args[2] );
 		return re.GetEntityToken( VMA(1), args[2] );
 
+#if defined( QC )
+	case DO_NOT_WANT_CG_S_STOPLOOPINGSOUND:
+		return 0;
+#endif // QC
+
 	case CG_R_INPVS:
 		return re.inPVS( VMA(1), VMA(2) );
+
+#if defined( QC )
+	case CG_GET_ADVERTISEMENTS:
+		re.GetAdvertisements( VMA(1), VMA(2), VMA(3) );
+		return 0;
+		
+	case CG_R_DRAWTRIANGLE:
+		re.DrawTriangle( VMF(1), VMF(2), VMF(3), VMF(4), VMF(5), VMF(6), VMF(7), VMF(8), VMF(9), VMF(10), VMF(11), VMF(12), args[13] );
+		return 0;
+
+	case CG_CM_PROJECTDECAL:
+		return re.ProjectDecal( VMA(1), VMA( 2 ), VMF( 3 ), VMF( 4 ), VMF( 5 ), args[6], VMA( 7 ), VMA( 8 ), args[9], VMA( 10 ) );
+#endif
 
 	// engine extensions
 	case CG_R_ADDREFENTITYTOSCENE2:

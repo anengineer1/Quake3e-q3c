@@ -81,7 +81,10 @@ typedef struct {
 	void	(*SetColor)( const float *rgba );	// NULL = 1,1,1,1
 	void	(*DrawStretchPic) ( float x, float y, float w, float h,
 		float s1, float t1, float s2, float t2, qhandle_t hShader );	// 0 = white
-
+/* #if defined ( QC ) // Triangle implementation uncomment after development */
+	void	(*DrawTriangle)( float x0, float y0, float x1, float y1, float x2, float y2,
+		float s0, float t0, float s1, float t1, float s2, float t2, qhandle_t hShader );
+/* #endif */
 	// Draw images for cinematic rendering, pass as 32 bit rgba
 	void	(*DrawStretchRaw)( int x, int y, int w, int h, int cols, int rows, byte *data, int client, qboolean dirty );
 	void	(*UploadCinematic)( int w, int h, int cols, int rows, byte *data, int client, qboolean dirty );
